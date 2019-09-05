@@ -1,0 +1,36 @@
+#
+# define display information
+#
+name: Analyze Genes Against Pathways
+
+tooltip: |
+    Takes the bug's genes (E.C. Numbers, TIGR ID's, rxn id's, etc.) and checks whether pathways include the genes.
+
+screenshots: []
+
+icon: null
+
+#
+# define a set of similar apps that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    main_input_ref :
+        ui-name : |
+            Genome_Data
+        short-hint : |
+            The genome to be analyzed- may be in several different formats
+.
+
+description : |
+    <p>Given all the reactions of a genome, you may be interested in seeing how various pathways perform. This method takes the reactions and compares them, one after another, to all the pathways given by KEGG </p>
+
