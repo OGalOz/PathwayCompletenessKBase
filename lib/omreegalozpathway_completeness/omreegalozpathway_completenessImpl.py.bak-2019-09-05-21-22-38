@@ -23,8 +23,8 @@ class omreegalozpathway_completeness:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = "https://github.com/OGalOz/PathwayCompletenessKBase.git"
-    GIT_COMMIT_HASH = "cea246a723e0a5f2bdf6a06d0dc2f616cd6fb4bc"
+    GIT_URL = ""
+    GIT_COMMIT_HASH = ""
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -59,8 +59,6 @@ class omreegalozpathway_completeness:
 
         #this is how you log
         logging.info('Log A: We are beginning')
-
-        #This is how you write to a file.
         test_local_log_file = os.path.join(self.shared_folder, 'OGtest.txt')
         f=open(test_local_log_file, 'w')
         f.write("Try this.")

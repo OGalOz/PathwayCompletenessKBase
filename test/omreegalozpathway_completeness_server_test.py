@@ -64,4 +64,4 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
         ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {'workspace_name': self.wsName,
-                                                             'parameter_1': 'Hello World!'})
+                                                             'main_input_ref': 'Hello World!'})

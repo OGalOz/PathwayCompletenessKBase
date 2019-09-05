@@ -28,8 +28,7 @@ parameters :
         ui-name : |
             Genome_Data
         short-hint : |
-            The genome to be analyzed- may be in several different formats
-.
+            The genome to be analyzed- may be in several different formats.
 
 description : |
     <p>Given all the reactions of a genome, you may be interested in seeing how various pathways perform. This method takes the reactions and compares them, one after another, to all the pathways given by KEGG </p>

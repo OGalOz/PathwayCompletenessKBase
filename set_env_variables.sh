@@ -13,5 +13,6 @@ impl=$PWD/lib/omreegalozpathway_completeness/omreegalozpathway_completenessImpl.
 
 tst=$PWD/test/omreegalozpathway_completeness_server_test.py 
 
+github_user_name=OGalOz
 
 
