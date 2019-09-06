@@ -53,7 +53,7 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
             print('Test workspace was deleted')
 
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
-    def test_your_method(self):
+    #def test_your_method(self):
         # Prepare test objects in workspace if needed using
         # self.getWsClient().save_objects({'workspace': self.getWsName(),
         #                                  'objects': []})
@@ -63,5 +63,18 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {'workspace_name': self.wsName,
-                                                             'main_input_ref': 'Hello World!'})
+        #ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {'workspace_name': self.wsName,'main_input_ref': '32176/3/2'})
+
+    def test_kbase_genome(self):
+        #enter name of existing reference, from Lauren's assembly 
+        #The type of this data is: "KBaseGenomes.Genome‑10.0"
+
+        ref = "32176/5/1"
+        ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {
+            'workspace_name': self.wsName,
+            'main_input_ref': ref,
+        })
+
+
+
+

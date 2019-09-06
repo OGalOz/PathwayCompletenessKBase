@@ -65,7 +65,7 @@ class omreegalozpathway_completeness:
         report_info_string = str(report_info)
 
 
-        #TEST FOR Genome type: KBaseGenomes.Genome???10.0
+        #TEST FOR Genome type: KBaseGenomes.Genome‑10.0
         #We want to download the file
         ref_num = params['main_input_ref']
 

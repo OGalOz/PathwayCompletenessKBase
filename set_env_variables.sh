@@ -16,3 +16,5 @@ tst=$PWD/test/omreegalozpathway_completeness_server_test.py
 github_user_name=OGalOz
 
 
+tmpfiles=$PWD/test_local/workdir/tmp/
+

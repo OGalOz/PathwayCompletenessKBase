@@ -4,9 +4,7 @@ import logging
 import os
 
 
-#from installed_clients.AssemblyUtilClient import AssemblyUtil
-#from installed_clients.DataFileUtilClient import DataFileUtil
-from installed_clients.GenomeFileUtilClient import GenomeFileUtil
+from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
@@ -38,8 +36,6 @@ class omreegalozpathway_completeness:
     def __init__(self, config):
         #BEGIN_CONSTRUCTOR
         self.callback_url = os.environ['SDK_CALLBACK_URL']
-        #self.dfu = DataFileUtil(self.callback_url)
-        self.gfu = GenomeFileUtil(self.callback_url)
         self.shared_folder = config['scratch']
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
@@ -65,30 +61,20 @@ class omreegalozpathway_completeness:
         report_info_string = str(report_info)
 
 
-        #TEST FOR Genome type: KBaseGenomes.Genome???10.0
+        #TEST FOR Finished Fasta Assembly
         #We want to download the file
         ref_num = params['main_input_ref']
+        assemblyUtil = AssemblyUtil(self.callback_url)
+        fasta_file = assemblyUtil.get_assembly_as_fasta({'ref': ref_num})
 
 
-        genome_dict = self.gfu.genome_to_gff({'genome_ref': ref_num})
-        logging.info('what is the genome file: ' + str(type(genome_dict)))
-
-        logging.info("the keys:")
-        for k in genome_dict.keys():
-            logging.info(str(k))
-        
-
-
-        f_path = genome_dict['file_path']
-
-        #removing slashes from reference number
-        ref_wo_slash = ref_num.replace('/','')
-
+        #this is how you log
+        logging.info('Log A: We are beginning')
 
         #This is how you write to a file.
-        test_local_log_file = os.path.join(self.shared_folder, ref_wo_slash)
+        test_local_log_file = os.path.join(self.shared_folder, 'OGtest.txt')
         f=open(test_local_log_file, 'w')
-        f.write(str(str(genome_dict)))
+        f.write(fasta_file)
         f.close()
 
 
