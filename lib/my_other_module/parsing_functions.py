@@ -34,4 +34,11 @@ def print_d2_list_out_to_tsv_file(input_list, output_filename):
 
 
 
+def check_if_tsv_or_csv(filename):
+    if filename[-3:] == 'tsv':
+        return 'tsv'
+    elif filename[-3:] == 'csv':
+        return 'csv'
+    else:
+        return 'Unknown'
 

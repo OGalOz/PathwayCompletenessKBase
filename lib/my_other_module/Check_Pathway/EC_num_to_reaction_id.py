@@ -3,49 +3,41 @@
 #It also allows you to input a reaction ID and get an EC number in return
 #It uses the file 'reactions.tsv' as provided at 'https://raw.githubusercontent.com/ModelSEED/ModelSEEDDatabase/dev/Biochemistry/reactions.tsv
 
-# First step is to import file into arrays with each line of the file represented as one array/ list.
-
+from my_other_module.parsing_functions import tsv_to_d2_list
 
 
 
 # FILENAMES -----------------------------------
-Package_Center = "/Users/OmreeG/Dropbox/LBL_Research-Ark_lab/Programs/DB_Mappings"
-Programs_Home = "/Users/OmreeG/Dropbox/LBL_Research-Ark_lab/Programs"
 
-
-Data_Directory_Filepath = "/Users/OmreeG/Dropbox/LBL_Research-Ark_lab/Programs/DB_Mappings/Data/General/"
+Data_Directory_Filepath = "/kb/module/data/"
 
 
 KEGG_Pathways_Filepath = Data_Directory_Filepath + 'KEGG.pathways.txt'
 REACTIONS_Filepath = Data_Directory_Filepath + 'reactions.tsv'
-TIGRINFO_Filepath = Data_Directory_Filepath + 'TIGR_Info_Sorted.csv'
-
-
-Bug_Directory_Filepath = "/Users/OmreeG/Dropbox/LBL_Research-Ark_lab/Programs/Metabolic_Model_Scripts/Data/"
-
-
-#Note the following file is a CSV
-FW602_Tigr_Filepath = Bug_Directory_Filepath + 'FW602_bin_15_Metabolic_Model/FW602-Tigrfam-Domain-Annot.csv'
-
+TIGRINFO_Filepath = Data_Directory_Filepath + 'tigrinfo.tsv'
 
 #End_of_Filenames#################################----------------
 
 
-import sys
-sys.path.insert(0, Package_Center)
-sys.path.insert(0, Programs_Home)
+#This function takes a d1 list of EC numbers [EC 1, EC 2, EC 3, ... EC n]
+#And it returns all the associated rxn numbers and an ordered list of ecs and rxns.
+def EC_to_Rxn_Ids(EC_list_d1, Rxn_list_d2):
 
-#test
-from Programs.DB_Mappings.DB_Aux_Programs.capture import tsv_to_d2_list
+    # a list that's organized with EC numbers and associated reactions.
+    all_rxns_d3 = [['EC Number',['Associated Rxn Numbers'] ]]
 
-#imports
-from DB_Mappings.DB_Aux_Programs.capture import tsv_to_d2_list
-from DB_Mappings.program_files.populate_EC_numbers_in_reaction_list import find_reaction_location
-
+    # a list that just has all the reactions- for pathway completeness tests
+    all_rxns_d1 = []
+    for ec_num in EC_list_d1:
+        rxn_list_d1 = return_reaction_ids_from_ec_num(ec_num, Rxn_list_d2)
+        all_rxns_d3.append([ec_num,rxn_list_d1])
+        for rxn in rxn_list_d1:
+            all_rxns_d1.append(rxn)
+    return [all_rxns_d3, all_rxns_d1]
 
 
 # If necessary:
-RXN_List = tsv_to_d2_list(REACTIONS_Filepath)
+RXN_List_d2 = tsv_to_d2_list(REACTIONS_Filepath)
 
 
 # In the arrays in RXN_LIST, index 0 is "reaction id", index 13 is the "EC number"
@@ -55,7 +47,7 @@ def return_reaction_ids_from_ec_num(EC_Number, RXN_LIST):
 	for i in range(len(RXN_LIST)):
 		current_row = RXN_LIST[i]
 		if check_existence(current_row[13],EC_Number):
-			rxn_ids.append(current_row[0])
+			rxn_ids.append(current_row[1])
 	return rxn_ids
 
 #This part of the program is written because some reactions are associated
@@ -71,7 +63,7 @@ def check_existence(a,b):
 	return False
 
 
-def return_ec_num_from_reaction_id(reaction_ID, RXN_List)"
+def return_ec_num_from_reaction_id(reaction_ID, RXN_List):
 
     estimated_index = int(reaction_id[3:])
     location = find_reaction_location(rxn_id, estimated_index, Rxn_List)
@@ -91,7 +83,7 @@ def test():
 		print("type EC number here, type 'y' to end program")
 		EC_Number = input()
 		if EC_Number != 'y':
-			print(return_reaction_ids_from_ec_num(EC_Number, RXN_LIST))
+			print(return_reaction_ids_from_ec_num(EC_Number, RXN_List_d2))
 		else:
 			stop = 'y'
 #test()

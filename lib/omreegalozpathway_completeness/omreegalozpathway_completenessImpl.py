@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import logging
 import os
@@ -32,7 +32,7 @@ class omreegalozpathway_completeness:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/OGalOz/PathwayCompletenessKBase.git"
-    GIT_COMMIT_HASH = "9dbfc486cb21b1f0c46a605616553d604660d8af"
+    GIT_COMMIT_HASH = "405a957e4d408fa9556927eaffcdf3bbbe36b12b"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -112,7 +112,7 @@ class omreegalozpathway_completeness:
 
         #Testing New Material Sept 10th:
         bug_filepath = '/kb/module/data/FW602-Tigrfam-Domain-Annot.csv'
-        output_path = os.path.join(self.shared_folder, 'tfam_to_ec.tsv')
+        output_path = os.path.join(self.shared_folder, 'tfam_to_pathways.tsv')
         TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)       
 
 

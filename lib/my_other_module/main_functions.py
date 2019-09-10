@@ -3,8 +3,12 @@
 
 import os
 from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file
-from my_other_module.Check_Pathway.check_pathways_vs_reactions import main_cp
+from my_other_module.Check_Pathway.check_pathways_vs_reactions import main_cp, sub_cp
 from my_other_module.Check_Pathway.TIGRFAM_to_EC import tfam_main
+from my_other_module.Aux_Functions.aux_1 import tfams_and_ecs_d2_to_ecs_d1
+from my_other_module.Check_Pathway.EC_num_to_reaction_id import EC_to_Rxn_Ids 
+import logging
+
 
 
 #This bug_filepath needs to be the reactions file
@@ -26,12 +30,33 @@ def TIGRFAM_file_to_pathway_reactions_and_percentages(bug_tfam_filepath, output_
         tfam_ids_d1.append(bug_tfam_d2_list[i][5])
 
     #Here we get the d2 list of tfam ids and related ec numbers
-    tfams_and_ecs = tfam_main(tfam_ids_d1)
+    #The list looks like: [[tfam, ec],[tfam,ec],...]
+    tfams_and_ecs_d2 = tfam_main(tfam_ids_d1)
+
+    #Here we convert the tfams and ecs d2 list into just a list of ecs.
+    ecs_d1 = tfams_and_ecs_d2_to_ecs_d1(tfams_and_ecs_d2)
+    logging.info("Here is ec's in a d1 list")
+    logging.info(ecs_d1)
+
+    
+    #Here we convert the d1 list of ECs to reactions.
+    #For this we need to import the table from reactions. Must ensure rxn ids look like 'R00012'
+    rxn_list_d2 = tsv_to_d2_list("/kb/module/data/reactions.tsv")
+
+    rxns_d1 = EC_to_Rxn_Ids(ecs_d1,rxn_list_d2)[1]
+    logging.info(rxns_d1)
+    
+    
+    #Now we need to compare the reactions to the pathways as before, but with a 
+    # new function.
+    measured_pathways_d3 = sub_cp(rxns_d1)
 
     
     #For now just print the output
-    print_d2_list_out_to_tsv_file(tfams_and_ecs, output_file_pathway)
-
+    #print_d2_list_out_to_tsv_file(tfams_and_ecs, output_file_pathway)
+    
+    #The output file pathway comes from 
+    print_d2_list_out_to_tsv_file(measured_pathways_d3, output_file_pathway)
 
 
 
