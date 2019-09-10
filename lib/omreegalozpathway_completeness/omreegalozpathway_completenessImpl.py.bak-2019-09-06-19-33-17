@@ -1,17 +1,13 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import logging
 import os
-from Bio import SeqIO
 
 
 #from installed_clients.AssemblyUtilClient import AssemblyUtil
 #from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
-from my_other_module.main_functions import reactions_file_to_pathway_reactions_and_percentages, TIGRFAM_file_to_pathway_reactions_and_percentages
-
-
 #END_HEADER
 
 
@@ -32,7 +28,7 @@ class omreegalozpathway_completeness:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/OGalOz/PathwayCompletenessKBase.git"
-    GIT_COMMIT_HASH = "9dbfc486cb21b1f0c46a605616553d604660d8af"
+    GIT_COMMIT_HASH = "521bbaee75d8737ab820c97bd45a2c2ccafb2ccd"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -71,51 +67,33 @@ class omreegalozpathway_completeness:
 
         #TEST FOR Genome type: KBaseGenomes.Genome???10.0
         #We want to download the file
-        #ref_num = params['main_input_ref']
+        ref_num = params['main_input_ref']
 
 
-        #genome_gff_dict = self.gfu.genome_to_gff({'genome_ref': ref_num})
-        #logging.info('what is the genome file: ' + str(type(genome_dict)))
+        genome_gff_dict = self.gfu.genome_to_gff({'genome_ref': ref_num})
+        logging.info('what is the genome file: ' + str(type(genome_dict)))
 
 
         #Getting genbank info
-        #genome_genbank = self.gfu.genome_to_genbank({'genome_ref': ref_num})
+        genome_genbank = self.gfu.genome_to_genbank({'genome_ref': ref_num})
 
-        #converting the genbank file into readable format using BioPython: unclear if this will work.
-        #record = SeqIO.read(genome_genbank, "genbank")
-
-
-        #logging.info("the keys:")
-        #for k in genome_dict.keys():
-        #    logging.info(str(k))
+        logging.info("the keys:")
+        for k in genome_dict.keys():
+            logging.info(str(k))
         
 
 
-        #f_path = genome_dict['file_path']
+        f_path = genome_dict['file_path']
 
         #removing slashes from reference number
-        #ref_wo_slash = ref_num.replace('/','')
+        ref_wo_slash = ref_num.replace('/','')
 
 
         #This is how you write to a file.
-        #test_local_log_file = os.path.join(self.shared_folder, ref_wo_slash)
-        #f=open(test_local_log_file, 'w')
-        #f.write(str(str(genome_dict)))
-        #f.close()
-
-        """
-        #Testing New material Sept 9: The bug filepath will need to be changed.
-        bug_filepath = '/kb/module/data/HL1H_bin_57_Metabolic_Model-reactions.tsv'
-        output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
-        reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
-        """
-
-        #Testing New Material Sept 10th:
-        bug_filepath = '/kb/module/data/FW602-Tigrfam-Domain-Annot.csv'
-        output_path = os.path.join(self.shared_folder, 'tfam_to_ec.tsv')
-        TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)       
-
-
+        test_local_log_file = os.path.join(self.shared_folder, ref_wo_slash)
+        f=open(test_local_log_file, 'w')
+        f.write(str(str(genome_dict)))
+        f.close()
 
 
         output = {

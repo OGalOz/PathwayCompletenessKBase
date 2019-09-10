@@ -18,3 +18,6 @@ github_user_name=OGalOz
 
 tmpfiles=$PWD/test_local/workdir/tmp/
 
+
+mymod=$PWD/lib/my_other_module/
+

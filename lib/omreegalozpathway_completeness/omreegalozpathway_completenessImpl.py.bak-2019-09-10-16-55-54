@@ -113,7 +113,7 @@ class omreegalozpathway_completeness:
         #Testing New Material Sept 10th:
         bug_filepath = '/kb/module/data/FW602-Tigrfam-Domain-Annot.csv'
         output_path = os.path.join(self.shared_folder, 'tfam_to_ec.tsv')
-        TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)       
+        
 
 
 
