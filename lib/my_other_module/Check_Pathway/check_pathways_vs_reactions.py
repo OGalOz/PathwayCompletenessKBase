@@ -26,17 +26,10 @@ def main_cp(bug_filename):
 
         #Convert d2 to d1 list:
         #You need a d1 list of all the reactions in the bug:
-        bug_rxn_list_d1 = []
-        for i in range(1, len(bug_rxn_list_d2)):
-                #Checking if all the columns are present in the row
-                if len(bug_rxn_list_d2[i]) > 11:
-                    #The 12th column contains the kegg id eg 'R00512'
-                    bug_rxn_list_d1.append(bug_rxn_list_d2[i][12])
-
-
+        bug_rxn_list_d1 = bug_table_d2_to_d1_reactions(bug_rxn_list_d2)
 	
 	#measured pathways list looks like:
-        measured_pathways_list_d3 = pathway_measure(pathways_list_d2, bug_rxn_list_d2)	
+        measured_pathways_list_d3 = pathway_measure(pathways_list_d2, bug_rxn_list_d1)	
 
 
 	#Here we add the filename we want to the list:
@@ -54,7 +47,7 @@ def pathway_measure(pathways_list_d2, bug_rxn_list_d1):
 	
 
 	#Each item in measured_pathways_list: [name, [reactions yes], [reactions no], percentage yes]
-        measured_pathways_list_d3 = [['Pathway name', 'Reactions Present', 'reactions not present', 'percentage']]
+        measured_pathways_list_d3 = [['Pathway name', 'Reactions Present', 'Reactions not Present', 'Percentage']]
 
         for i in range (1, len(pathways_list_d2)):
 
@@ -63,6 +56,8 @@ def pathway_measure(pathways_list_d2, bug_rxn_list_d1):
 
 		#The following line gets a list with the pathway's info from the data text file.
                 crnt_pathway = pathways_list_d2[i]
+
+                #The second index of crnt_pathway is the name of the pathway
                 pathway_info.append(crnt_pathway[2])
 
 		
@@ -84,11 +79,11 @@ def get_reactions(pathway_list):
 
 
 #The following function compares the reactions from the pathway to the reactions in the bug. Incomplete.
-def compare_reactions(pathway_rxn_list, bug_rxn_list_d1, pathway_info):
+def compare_reactions(pathway_rxn_list_d1, bug_rxn_list_d1, pathway_info):
 	
     rxns_present = []
     rxns_not_present = []
-    for rxn in pathway_rxn_list:
+    for rxn in pathway_rxn_list_d1:
         if rxn in bug_rxn_list_d1:
             rxns_present.append(rxn)
         else:
@@ -99,7 +94,7 @@ def compare_reactions(pathway_rxn_list, bug_rxn_list_d1, pathway_info):
     if len(rxns_not_present) == 0 and len(rxns_present)== 1:
         pathway_info.append(0)
     else:
-        pathway_info.append(float(len(rxns_present)/len(pathway_rxn_list)))
+        pathway_info.append(float(len(rxns_present)/len(pathway_rxn_list_d1)))
     return pathway_info
 
 
@@ -109,4 +104,18 @@ def sub_cp(bug_rxn_list_d1):
     pathways_list_d2 = tsv_to_d2_list(Pathways_File_Name)
     measured_pathways_list_d3 = pathway_measure(pathways_list_d2, bug_rxn_list_d1)
     return measured_pathways_list_d3    
+
+
+# This function converts a d2 bug file to a d1 list of all the reactions in the bug, eg R00012
+def bug_table_d2_to_d1_reactions(bug_rxn_list_d2):
+    
+   bug_rxn_list_d1 = []
+   for i in range(1, len(bug_rxn_list_d2)):
+       #Checking if all the columns are present in the row
+       if len(bug_rxn_list_d2[i]) > 11:
+           #The 12th column contains the kegg id eg 'R00512'
+           bug_rxn_list_d1.append(bug_rxn_list_d2[i][12])
+
+   return bug_rxn_list_d1
+
 

@@ -64,16 +64,30 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
         #ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {'workspace_name': self.wsName,'main_input_ref': '32176/3/2'})
-
+        """
     def test_kbase_genome(self):
         #enter name of existing reference, from Lauren's assembly 
         #The type of this data is: "KBaseGenomes.Genome‑10.0"
 
-        ref = "32176/5/1"
+        ref = "321"
         ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {
             'workspace_name': self.wsName,
             'main_input_ref': ref,
         })
+
+        """
+
+    def test_FBA_Model(self):
+        
+        #This is an example FBAModel called SHW_Metabolic_Model
+        ref = "32176/11/1"
+
+        ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {
+            'workspace_name': self.wsName,
+            'main_input_ref': ref,
+        })
+
+
 
 
 

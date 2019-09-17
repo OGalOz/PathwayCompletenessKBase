@@ -7,6 +7,14 @@
   "type" : "sdk",
   "version_tag" : "release"
 }, {
+  "module_name" : "fba_tools",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
+  "module_name" : "FBAFileUtil",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
   "module_name" : "GenomeFileUtil",
   "type" : "sdk",
   "version_tag" : "release"

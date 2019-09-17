@@ -29,7 +29,10 @@ def EC_to_Rxn_Ids(EC_list_d1, Rxn_list_d2):
     # a list that just has all the reactions- for pathway completeness tests
     all_rxns_d1 = []
     for ec_num in EC_list_d1:
-        rxn_list_d1 = return_reaction_ids_from_ec_num(ec_num, Rxn_list_d2)
+        #Reaction abbreviations look like 'R0005', reaction ids look like rxn004
+        rxn_list_d1 = return_reaction_abbreviations_from_ec_num(ec_num, Rxn_list_d2)
+        
+        
         all_rxns_d3.append([ec_num,rxn_list_d1])
         for rxn in rxn_list_d1:
             all_rxns_d1.append(rxn)
@@ -40,15 +43,25 @@ def EC_to_Rxn_Ids(EC_list_d1, Rxn_list_d2):
 RXN_List_d2 = tsv_to_d2_list(REACTIONS_Filepath)
 
 
-# In the arrays in RXN_LIST, index 0 is "reaction id", index 13 is the "EC number"
+# In the arrays in RXN_LIST, index 0 is "reaction id" (rxn0001), index 1 is abbreviation (R0004), index 13 is the "EC number"
 
 def return_reaction_ids_from_ec_num(EC_Number, RXN_LIST):
 	rxn_ids = []
 	for i in range(len(RXN_LIST)):
 		current_row = RXN_LIST[i]
 		if check_existence(current_row[13],EC_Number):
-			rxn_ids.append(current_row[1])
+			rxn_ids.append(current_row[0])
 	return rxn_ids
+
+def return_reaction_abbreviations_from_ec_num(EC_Number, RXN_LIST):
+        rxn_ids = []
+        for i in range(len(RXN_LIST)):
+                current_row = RXN_LIST[i]
+                if check_existence(current_row[13],EC_Number):
+                        rxn_ids.append(current_row[1])
+        return rxn_ids
+
+
 
 #This part of the program is written because some reactions are associated
 #With multiple EC numbers; in that case, the EC numbers are listed "#1|#2|#3|... etc"
