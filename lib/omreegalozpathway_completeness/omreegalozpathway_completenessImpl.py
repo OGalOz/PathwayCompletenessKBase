@@ -65,8 +65,8 @@ class omreegalozpathway_completeness:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_omreegalozpathway_completeness
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
+        report_client = KBaseReport(self.callback_url)
+        report_info = report_client.create({'report': {'objects_created':[],
                                                 'text_message': params['main_input_ref']},
                                                 'workspace_name': params['workspace_name']})
 
@@ -87,17 +87,6 @@ class omreegalozpathway_completeness:
         logging.info("Workspace Name: " + ws_name)
 
 
-        
-        """ Start Comment
-        #This function, from FBAFileUtil takes an FBAModel to a TSV file.
-        fba_util = FBAFileUtil(self.callback_url) 
-
-        X = fba_util.model_to_tsv_file( {"workspace_name": ws_name , "model_name" : object_name} )
-
-        Stop Comment"""
-
-        
-
         fba_t = fba_tools(self.callback_url)
 
         X = fba_t.export_model_as_tsv_file({"input_ref": upa })
@@ -113,6 +102,10 @@ class omreegalozpathway_completeness:
         bug_filepath = reactions_file_path
         output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
         reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
+
+        html_path = os.path.join(self.shared_folder, 'check_path_complete.html')
+
+        html_dict = [{"path" : html_path, "name" : 'Completeness_Table'}]
 
           
         """Start Comment
@@ -153,9 +146,6 @@ class omreegalozpathway_completeness:
         #record = SeqIO.read(genome_genbank, "genbank")
 
 
-        #logging.info("the keys:")
-        #for k in genome_dict.keys():
-        #    logging.info(str(k))
         
 
 
@@ -193,6 +183,19 @@ class omreegalozpathway_completeness:
         #bug_filepath = '/kb/module/data/kb|g.220339.fbamdl0-reactions.tsv'
         #output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
         #reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
+
+        #Use pandas to make an HTML Table from the tsv file
+
+
+        report = report_client.create_extended_report({
+
+        'message' : 'Here are the pathway completeness results',
+        'workspace_name' : ws_name,
+        'html_links' : html_dict
+
+        })
+
+
 
 
         output = {

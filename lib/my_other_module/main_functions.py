@@ -2,7 +2,7 @@
 
 
 import os
-from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file
+from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file, d2_list_to_html_table_file
 from my_other_module.Check_Pathway.check_pathways_vs_reactions import main_cp, sub_cp
 from my_other_module.Check_Pathway.TIGRFAM_to_EC import tfam_main
 from my_other_module.Aux_Functions.aux_1 import tfams_and_ecs_d2_to_ecs_d1, extract_tfam_IDs
@@ -15,6 +15,8 @@ import logging
 def reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_file_pathway):
         cp_output_list_d3 = main_cp(bug_filepath)
         print_d2_list_out_to_tsv_file(cp_output_list_d3, output_file_pathway)
+        html_pathway = output_file_pathway[:-3] + 'html'
+        d2_list_to_html_table_file(cp_output_list_d3, html_pathway)
 
 
 #This bug_filepath needs to be the TIGRFAM annotations file.
