@@ -173,7 +173,6 @@ class omreegalozpathway_completeness:
         #reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
 
  
-        """
         report = report_client.create_extended_report({
 
         'direct_html_link_index': 0,
@@ -182,13 +181,11 @@ class omreegalozpathway_completeness:
         'html_links' : html_dict
 
         })
-        """
 
 
-        #later change report_info to report
         output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
+            'report_name': report['name'],
+            'report_ref': report['ref'],
         }
         #END run_omreegalozpathway_completeness
 
