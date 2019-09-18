@@ -66,11 +66,15 @@ class omreegalozpathway_completeness:
         # return variables are: output
         #BEGIN run_omreegalozpathway_completeness
         report_client = KBaseReport(self.callback_url)
+
+        """ start
         report_info = report_client.create({'report': {'objects_created':[],
                                                 'text_message': params['main_input_ref']},
                                                 'workspace_name': params['workspace_name']})
 
-        report_info_string = str(report_info)
+        end """
+
+        #report_info_string = str(report_info)
 
 
         token = os.environ.get('KB_AUTH_TOKEN', None)
@@ -184,8 +188,7 @@ class omreegalozpathway_completeness:
         #output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
         #reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
 
-        #Use pandas to make an HTML Table from the tsv file
-
+ 
 
         report = report_client.create_extended_report({
 
@@ -200,8 +203,8 @@ class omreegalozpathway_completeness:
 
 
         output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
+            'report_name': report['name'],
+            'report_ref': report['ref'],
         }
         #END run_omreegalozpathway_completeness
 
