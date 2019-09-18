@@ -96,14 +96,14 @@ class omreegalozpathway_completeness:
         logging.info(obj_info)     
         logging.info("Object Name: " + object_name)   
         logging.info("Workspace Name: " + ws_name)
-
+        output_file_name = 'pathways_measurements'
         #This part is a hack, need to check type of data more accurately.
         if object_type[:17] == 'KBaseFBA.FBAModel':
             logging.info("Object type is FBA Model")
             fba_t = fba_tools(self.callback_url)
             X = fba_t.export_model_as_tsv_file({"input_ref": upa })
             reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
-            output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
+            output_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
             bug_filepath = reactions_file_path
             reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)            
         elif object_type[:34] == "KBaseGeneFamilies.DomainAnnotation":
@@ -111,14 +111,14 @@ class omreegalozpathway_completeness:
             da = DomainAnnotation(self.callback_url)
             obj = ws.get_objects2({'objects': [{'ref': upa}]})
             Y = obj['data'][0]['data']['data']
-            output_file_path = os.path.join(self.shared_folder,'test-data-2.tsv')
+            output_file_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
             TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path)
             
         else:
             logging.info("Object type unknown")
        
 
-        html_path = os.path.join(self.shared_folder, 'check_path_complete.html')
+        html_path = os.path.join(self.shared_folder, output_file_name + '.html')
 
         html_dict = [{"path" : html_path, "name" : 'Completeness_Table'}]
 
