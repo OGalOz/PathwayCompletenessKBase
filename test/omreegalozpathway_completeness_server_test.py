@@ -80,7 +80,7 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         """
 
 
-
+    """
     def test_FBA_Model(self):
         
         #This is an example FBAModel called SHW_Metabolic_Model
@@ -91,7 +91,17 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
             'main_input_ref': ref,
         })
 
+    """
+    def test_Domain_Annotation(self):
+        
 
+        #This is an example TIGRFam Domain Annotation structure
+        ref = "32176/26/1"
+
+        ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {
+            'workspace_name': self.wsName,
+            'main_input_ref': ref,
+        })
 
 
 

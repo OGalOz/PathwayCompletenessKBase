@@ -2,7 +2,7 @@
 
 
 import os
-from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file, d2_list_to_html_table_file
+from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file, d2_list_to_html_table_file, get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2
 from my_other_module.Check_Pathway.check_pathways_vs_reactions import main_cp, sub_cp
 from my_other_module.Check_Pathway.TIGRFAM_to_EC import tfam_main
 from my_other_module.Aux_Functions.aux_1 import tfams_and_ecs_d2_to_ecs_d1, extract_tfam_IDs
@@ -20,14 +20,9 @@ def reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_fil
 
 
 #This bug_filepath needs to be the TIGRFAM annotations file.
-def TIGRFAM_file_to_pathway_reactions_and_percentages(bug_tfam_filepath, output_file_pathway):
+def TIGRFAM_file_to_pathway_reactions_and_percentages(Domain_annotations_dict, output_file_pathway):
         
-    #First step is to convert the bug tsv or csv file to a d2 list.
-    #IMPORTANT: MAKE SURE TO KNOW IF IT'S A CSV OR TSV FILE!!!!!!
-    bug_tfam_d2_list = csv_to_d2_list(bug_tfam_filepath)
-
-    #Here we take all the TFAM Ids from the list
-    tfam_ids_d1 = extract_tfam_IDs(bug_tfam_d2_list)
+    tfam_ids_d1 = get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2(Domain_annotations_dict)
 
     #Here we get the d2 list of tfam ids and related ec numbers
     #The list looks like: [[tfam, ec],[tfam,ec],...]
@@ -57,7 +52,8 @@ def TIGRFAM_file_to_pathway_reactions_and_percentages(bug_tfam_filepath, output_
     #The output file pathway comes from 
     print_d2_list_out_to_tsv_file(measured_pathways_d3, output_file_pathway)
 
-
+    html_pathway = output_file_pathway[:-3] + 'html'
+    d2_list_to_html_table_file(measured_pathways_d3, html_pathway)
 
 
 

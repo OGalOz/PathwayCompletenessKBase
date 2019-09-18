@@ -10,6 +10,7 @@ from Bio import SeqIO
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.fba_toolsClient import fba_tools
+from installed_clients.DomainAnnotationClient import DomainAnnotation
 from biokbase.workspace.client import Workspace
 from my_other_module.main_functions import reactions_file_to_pathway_reactions_and_percentages, TIGRFAM_file_to_pathway_reactions_and_percentages
 
@@ -67,12 +68,12 @@ class omreegalozpathway_completeness:
         #BEGIN run_omreegalozpathway_completeness
         report_client = KBaseReport(self.callback_url)
 
-        """ start
+        #"""
         report_info = report_client.create({'report': {'objects_created':[],
                                                 'text_message': params['main_input_ref']},
                                                 'workspace_name': params['workspace_name']})
 
-        end """
+        #end """
 
         #report_info_string = str(report_info)
 
@@ -82,30 +83,40 @@ class omreegalozpathway_completeness:
 
         ws = Workspace(self.ws_url, token=token)
         obj_info = ws.get_object_info3({'objects': [{'ref': upa}]})
+        
+        #logging.info(obj)
+        #logging.info(obj['data'])
+
 
         object_name = obj_info["infos"][0][1]
+        object_type = obj_info["infos"][0][2]
+        logging.info("Object Type: " + object_type)
         ws_name = obj_info["infos"][0][7]
         logging.info("Object Info")
         logging.info(obj_info)     
         logging.info("Object Name: " + object_name)   
         logging.info("Workspace Name: " + ws_name)
 
-
-        fba_t = fba_tools(self.callback_url)
-
-        X = fba_t.export_model_as_tsv_file({"input_ref": upa })
-    
+        #This part is a hack, need to check type of data more accurately.
+        if object_type[:17] == 'KBaseFBA.FBAModel':
+            logging.info("Object type is FBA Model")
+            fba_t = fba_tools(self.callback_url)
+            X = fba_t.export_model_as_tsv_file({"input_ref": upa })
+            reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
+            output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
+            bug_filepath = reactions_file_path
+            reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)            
+        elif object_type[:34] == "KBaseGeneFamilies.DomainAnnotation":
+            logging.info("Succesfully recognized type as Domain Annotation")
+            da = DomainAnnotation(self.callback_url)
+            obj = ws.get_objects2({'objects': [{'ref': upa}]})
+            Y = obj['data'][0]['data']['data']
+            output_file_path = os.path.join(self.shared_folder,'test-data-2.tsv')
+            TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path)
+            
+        else:
+            logging.info("Object type unknown")
        
-        logging.info("Printing response:")        
-        logging.info(X)
-
-        reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
-
-        logging.info(reactions_file_path)
- 
-        bug_filepath = reactions_file_path
-        output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
-        reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
 
         html_path = os.path.join(self.shared_folder, 'check_path_complete.html')
 
@@ -113,19 +124,11 @@ class omreegalozpathway_completeness:
 
           
         """Start Comment
-        #Check type here:
-        type_id = 1
-        bug_filepath = '/kb/module/data/kb|g.220339.fbamdl0-reactions.tsv'
-        output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
 
         #If type is TIGRFAM domain annotations, type_id = 0###
         if type_id == 0 :
             TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
-        #If type is reactions from FBA-Model###
-        elif type_id == 1 :
-            fba_util = FBAFileUtil(self.callback_url)
-                  
-            reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
+
         #If type is Prokka domain annotations###
         elif type_id == 2 :
             logging.info("Prokka incomplete")
@@ -133,10 +136,6 @@ class omreegalozpathway_completeness:
             logging.info("Could not get type of data")
 
         Stop Comment"""
-
-        #TEST FOR Genome type: KBaseGenomes.Genome???10.0
-        #We want to download the file
-        #ref_num = params['main_input_ref']
 
 
         #genome_gff_dict = self.gfu.genome_to_gff({'genome_ref': ref_num})
@@ -153,26 +152,11 @@ class omreegalozpathway_completeness:
         
 
 
-        #f_path = genome_dict['file_path']
-
-        #removing slashes from reference number
-        #ref_wo_slash = ref_num.replace('/','')
-
-
-        #This is how you write to a file.
         #test_local_log_file = os.path.join(self.shared_folder, ref_wo_slash)
         #f=open(test_local_log_file, 'w')
         #f.write(str(str(genome_dict)))
         #f.close()
 
-        """
-        #Testing New material Sept 9: The bug filepath will need to be changed.
-        #METABOLIC MODEL REACTIONS FILE!
-        #This data format (FBA Model) which is generated by the 'Build Metaboilic Model' app, contains a TSV file. 
-        bug_filepath = '/kb/module/data/HL1H_bin_57_Metabolic_Model-reactions.tsv'
-        output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
-        reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
-        """
 
         """
         #Testing New Material Sept 10th:
@@ -189,7 +173,7 @@ class omreegalozpathway_completeness:
         #reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
 
  
-
+        """
         report = report_client.create_extended_report({
 
         'direct_html_link_index': 0,
@@ -198,13 +182,13 @@ class omreegalozpathway_completeness:
         'html_links' : html_dict
 
         })
+        """
 
 
-
-
+        #later change report_info to report
         output = {
-            'report_name': report['name'],
-            'report_ref': report['ref'],
+            'report_name': report_info['name'],
+            'report_ref': report_info['ref'],
         }
         #END run_omreegalozpathway_completeness
 

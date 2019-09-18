@@ -7,6 +7,10 @@
   "type" : "sdk",
   "version_tag" : "release"
 }, {
+  "module_name" : "DomainAnnotation",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
   "module_name" : "fba_tools",
   "type" : "sdk",
   "version_tag" : "release"

@@ -1,6 +1,7 @@
 
 
 import csv
+import logging
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 
@@ -95,4 +96,40 @@ def check_if_tsv_or_csv(filename):
         return 'csv'
     else:
         return 'Unknown'
+
+
+# Following function used in main_functions
+#For the following func, the input dictionary comes after getting the object using ws.get_objects2,
+#    then taking "Y = obj['data'][0]['data']['data']", so you only have the contigs and related Features.
+def get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2(input_dict):
+
+    #For each 'key' (keys are contigs) in the dictionary, you get a list (a) of lists (b).
+    # list (a) contains all the features which are packaged into list (b)
+    # list (b) represents one feature, indeces are 0 = feature name, 1 = feature start in contig
+    # 2 = feature end in contig, 3 = feature direction in contig (1 positive, -1 negative) 
+    # 4 = a dict with the TIGR ID as the key.
+
+    #Initialize the TIGRFAM ID LIST TO RETURN
+    TIGR_ID_List = []
+ 
+    for k in input_dict.keys():
+        list_of_features = input_dict[k]
+        for feat in list_of_features:
+            tfam_dict = feat[4]
+            tfam_dict_keys_list = list(tfam_dict.keys())
+            if len(tfam_dict_keys_list) == 1:
+                TFAM_ID = tfam_dict_keys_list[0]
+                TIGR_ID_List.append(TFAM_ID)
+            elif len(tfam_dict_keys_list) > 1:
+                logging.info('multiple TIGRFAM IDs')
+                
+    return TIGR_ID_List
+    
+
+
+
+
+
+    
+
 
