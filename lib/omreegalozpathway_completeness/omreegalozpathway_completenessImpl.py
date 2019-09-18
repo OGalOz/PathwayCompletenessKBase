@@ -189,6 +189,7 @@ class omreegalozpathway_completeness:
 
         report = report_client.create_extended_report({
 
+        'direct_html_link_index': 0,
         'message' : 'Here are the pathway completeness results',
         'workspace_name' : ws_name,
         'html_links' : html_dict
