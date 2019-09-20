@@ -17,7 +17,13 @@ def reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_fil
         cp_output_list_d3 = main_cp(bug_filepath)
         print_d2_list_out_to_tsv_file(cp_output_list_d3, output_file_pathway)
         html_pathway = output_file_pathway[:-3] + 'html'
-        d2_list_to_html_table_file(cp_output_list_d3, html_pathway)
+
+        html_file_string = make_bar_graph_from_data(cp_output_list_d3, entity_title)
+
+        string_to_html_file(html_file_string, html_pathway)
+
+
+        #d2_list_to_html_table_file(cp_output_list_d3, html_pathway)
 
 
 #This bug_filepath needs to be the TIGRFAM annotations file.
