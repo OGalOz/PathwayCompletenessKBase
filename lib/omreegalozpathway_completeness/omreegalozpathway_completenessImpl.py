@@ -104,7 +104,7 @@ class omreegalozpathway_completeness:
             reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
             output_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
             bug_filepath = reactions_file_path
-            reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)            
+            reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path, object_name)            
         elif object_type[:34] == "KBaseGeneFamilies.DomainAnnotation":
             logging.info("Succesfully recognized type as Domain Annotation")
             da = DomainAnnotation(self.callback_url)

@@ -80,7 +80,6 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         """
 
 
-    """
     def test_FBA_Model(self):
         
         #This is an example FBAModel called SHW_Metabolic_Model
@@ -91,7 +90,6 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
             'main_input_ref': ref,
         })
 
-    """
     def test_Domain_Annotation(self):
         
 
