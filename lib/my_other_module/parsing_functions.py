@@ -3,7 +3,7 @@
 import csv
 import logging
 from jinja2 import Environment, PackageLoader, select_autoescape
-
+from my_other_module.HTML_Details import make_bar_graph_from_data
 
 def tsv_to_d2_list(file_name):
         d2_list = []
@@ -88,6 +88,12 @@ def d2_list_to_html_table_file(list_d2, output_filename):
     html_table = d2_list_to_html_table(list_d2)
     with open(output_filename, 'w') as f:
         f.write(html_table)
+
+def string_to_html_file(html_string, output_filename):
+        with open(output_filename, 'w') as f:
+            f.write(html_string)
+
+
 
 def check_if_tsv_or_csv(filename):
     if filename[-3:] == 'tsv':

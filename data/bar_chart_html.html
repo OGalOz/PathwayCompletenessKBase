@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>  
+</head>
+<body>
+<canvas id="myChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+
+
+data = ***{"labels":["January","February","March","April","May","June","July"],"datasets":[{"label":"Pathway Completeness","data":[65,59,80,81,56,55,40],"fill":false, "borderWidth":1}]}***
+
+
+options = {
+    scales: {
+        xAxes: [{
+            barPercentage: 0.8,
+            barThickness: 6,
+            maxBarThickness: 7,
+            minBarLength: 2,
+            ticks: {
+            beginAtZero: true
+            },
+            gridLines: {
+                offsetGridLines: true
+            }
+        }]
+    }
+};
+
+var myBarChart = new Chart(ctx, {
+
+    type: 'horizontalBar',
+    data: data,
+    options: options
+
+
+
+});
+
+</script>
+
+</body>
+</html>

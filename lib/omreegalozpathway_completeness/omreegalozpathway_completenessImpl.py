@@ -87,7 +87,6 @@ class omreegalozpathway_completeness:
         #logging.info(obj)
         #logging.info(obj['data'])
 
-
         object_name = obj_info["infos"][0][1]
         object_type = obj_info["infos"][0][2]
         logging.info("Object Type: " + object_type)
@@ -110,9 +109,20 @@ class omreegalozpathway_completeness:
             logging.info("Succesfully recognized type as Domain Annotation")
             da = DomainAnnotation(self.callback_url)
             obj = ws.get_objects2({'objects': [{'ref': upa}]})
+            
+            """#Temporary code:
+            data_struct_dict = obj['data']
+            temp_file_path = os.path.join(self.shared_folder, 'Temp_Data_File.txt')
+            f = open(temp_file_path, 'w')
+            f.write(str(data_struct_dict))
+            f.close()
+
+
+            #End temporary code"""
+
             Y = obj['data'][0]['data']['data']
             output_file_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
-            TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path)
+            TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path, object_name)
             
         else:
             logging.info("Object type unknown")

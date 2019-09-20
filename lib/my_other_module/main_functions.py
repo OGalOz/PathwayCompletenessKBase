@@ -2,11 +2,12 @@
 
 
 import os
-from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file, d2_list_to_html_table_file, get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2
+from my_other_module.parsing_functions import tsv_to_d2_list, csv_to_d2_list, print_d2_list_out_to_tsv_file, d2_list_to_html_table_file, get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2, string_to_html_file
 from my_other_module.Check_Pathway.check_pathways_vs_reactions import main_cp, sub_cp
 from my_other_module.Check_Pathway.TIGRFAM_to_EC import tfam_main
 from my_other_module.Aux_Functions.aux_1 import tfams_and_ecs_d2_to_ecs_d1, extract_tfam_IDs
 from my_other_module.Check_Pathway.EC_num_to_reaction_id import EC_to_Rxn_Ids 
+from my_other_module.HTML_Details import make_bar_graph_from_data
 import logging
 
 
@@ -20,7 +21,7 @@ def reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_fil
 
 
 #This bug_filepath needs to be the TIGRFAM annotations file.
-def TIGRFAM_file_to_pathway_reactions_and_percentages(Domain_annotations_dict, output_file_pathway):
+def TIGRFAM_file_to_pathway_reactions_and_percentages(Domain_annotations_dict, output_file_pathway, entity_title):
         
     tfam_ids_d1 = get_TIGRFAM_IDs_from_KBaseGeneFamilies_DomainAnnotation_2(Domain_annotations_dict)
 
@@ -53,7 +54,11 @@ def TIGRFAM_file_to_pathway_reactions_and_percentages(Domain_annotations_dict, o
     print_d2_list_out_to_tsv_file(measured_pathways_d3, output_file_pathway)
 
     html_pathway = output_file_pathway[:-3] + 'html'
-    d2_list_to_html_table_file(measured_pathways_d3, html_pathway)
+
+
+    html_file_string = make_bar_graph_from_data(measured_pathways_d3, entity_title)
+
+    string_to_html_file(html_file_string, html_pathway)
 
 
 
