@@ -79,36 +79,53 @@ class omreegalozpathway_completeness:
 
 
         token = os.environ.get('KB_AUTH_TOKEN', None)
-        upa = params['main_input_ref']
+
+        if "main_input_ref" in params:
+            upa = params['main_input_ref']
+        else:
+            logging.info('the reference number is not in the params, program must abort.')
+            #PROGRAM ABORT        
 
         ws = Workspace(self.ws_url, token=token)
         obj_info = ws.get_object_info3({'objects': [{'ref': upa}]})
-        
-        #logging.info(obj)
-        #logging.info(obj['data'])
 
-        object_name = obj_info["infos"][0][1]
-        object_type = obj_info["infos"][0][2]
-        logging.info("Object Type: " + object_type)
-        ws_name = obj_info["infos"][0][7]
-        logging.info("Object Info")
-        logging.info(obj_info)     
-        logging.info("Object Name: " + object_name)   
-        logging.info("Workspace Name: " + ws_name)
+        #Suppose ws.get_object_info3 failed:
+        # 
+
+        #Catching errors: 
+        if "infos" in obj_info:
+            object_name = obj_info["infos"][0][1]
+            object_type = obj_info["infos"][0][2]
+            logging.info("Object Type: " + object_type)
+            ws_name = obj_info["infos"][0][7]
+            logging.info("Object Info")
+            logging.info(obj_info)     
+            logging.info("Object Name: " + object_name)   
+            logging.info("Workspace Name: " + ws_name)
+        else:
+            logging.info("The function ws.get_object_info3 failed to download the right information. The program must abort.")
+            #PROGRAM ABORT
         output_file_name = 'pathways_measurements'
+
         #This part is a hack, need to check type of data more accurately.
         if object_type[:17] == 'KBaseFBA.FBAModel':
-            logging.info("Object type is FBA Model")
+            logging.info("Succesfully recognized type as FBA Model")
+            output_file_name += '_fba_model'
             fba_t = fba_tools(self.callback_url)
             X = fba_t.export_model_as_tsv_file({"input_ref": upa })
+            logging.info("the object output from fba tools export model as tsv file.")
+            logging.info(X)
             reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
             output_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
             bug_filepath = reactions_file_path
             reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path, object_name)            
         elif object_type[:34] == "KBaseGeneFamilies.DomainAnnotation":
             logging.info("Succesfully recognized type as Domain Annotation")
+            output_file_name += '_domain_annotation'
             da = DomainAnnotation(self.callback_url)
             obj = ws.get_objects2({'objects': [{'ref': upa}]})
+        
+
             
             """#Temporary code:
             data_struct_dict = obj['data']
