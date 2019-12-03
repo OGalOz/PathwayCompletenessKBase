@@ -9,6 +9,7 @@ from operator import itemgetter
 def make_bar_graph_from_data(table_list_d2, entity_title):
 
 
+    # This input file is created in order to allow us to easily make a bar chart.
     f = open("/kb/module/data/bar_chart_html.html","r")
     html_str = f.read()
     f.close()
@@ -16,8 +17,9 @@ def make_bar_graph_from_data(table_list_d2, entity_title):
     #Here we divide the bar chart into the parts that matter, index 1 is where we will insert all of the important information.
     html_list = html_str.split('***')
 
-    #This should be 3
-    logging.info(len(html_list))
+    #This should be 3. Test:
+    if len(html_list) != 3 :
+        logging.critical("length of html_list isn't as expected. It should be 3.")
     
 
     #The inserted html string will just be a python dictionary with the following form:

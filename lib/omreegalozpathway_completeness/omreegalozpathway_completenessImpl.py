@@ -66,140 +66,104 @@ class omreegalozpathway_completeness:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_omreegalozpathway_completeness
+
+        #Preparing report client
         report_client = KBaseReport(self.callback_url)
 
-        #"""
+        #Original report info
         report_info = report_client.create({'report': {'objects_created':[],
                                                 'text_message': params['main_input_ref']},
                                                 'workspace_name': params['workspace_name']})
 
-        #end """
-
-        #report_info_string = str(report_info)
-
-
         token = os.environ.get('KB_AUTH_TOKEN', None)
 
+
+        #Checking the input params
         if "main_input_ref" in params:
-            upa = params['main_input_ref']
+            main_input_ref = params['main_input_ref']
         else:
-            logging.info('the reference number is not in the params, program must abort.')
-            #PROGRAM ABORT        
+            logging.info('the reference number is not in the params, program must end.')
+            raise Exception("main_input_ref not in params")
 
+        #Creating the workspace client object
         ws = Workspace(self.ws_url, token=token)
-        obj_info = ws.get_object_info3({'objects': [{'ref': upa}]})
 
-        #Suppose ws.get_object_info3 failed:
-        # 
+        #Getting information about the main input ref
+        obj_info = ws.get_object_info3({'objects': [{'ref': main_input_ref}]})
+
 
         #Catching errors: 
         if "infos" in obj_info:
+            #Getting information from object reference number
             object_name = obj_info["infos"][0][1]
             object_type = obj_info["infos"][0][2]
-            logging.info("Object Type: " + object_type)
             ws_name = obj_info["infos"][0][7]
-            logging.info("Object Info")
-            logging.info(obj_info)     
-            logging.info("Object Name: " + object_name)   
-            logging.info("Workspace Name: " + ws_name)
+
+            #Logging:
+            logging.debug("Object Type: " + object_type)
+            logging.debug("Object Name: " + object_name)   
+            logging.debug("Workspace Name: " + ws_name)
         else:
             logging.info("The function ws.get_object_info3 failed to download the right information. The program must abort.")
-            #PROGRAM ABORT
+            raise Exception("Could not find infos in obj_info")
+        
+        #We create the output file name and add information to it later.
         output_file_name = 'pathways_measurements'
 
         #This part is a hack, need to check type of data more accurately.
         if object_type[:17] == 'KBaseFBA.FBAModel':
             logging.info("Succesfully recognized type as FBA Model")
+
+            #Preparing the output file name which we return to the user
             output_file_name += '_fba_model'
+
+            #Creating an fba tools object
             fba_t = fba_tools(self.callback_url)
-            X = fba_t.export_model_as_tsv_file({"input_ref": upa })
-            logging.info("the object output from fba tools export model as tsv file.")
+
+            # Getting the TSV file from the object
+            X = fba_t.export_model_as_tsv_file({"input_ref": main_input_ref })
+
+            # Logging
+            logging.info("the object output from fba tools export model as tsv file:")
             logging.info(X)
+
+            #Locating where the reactions tsv was placed (Not well done- replace this with a robust form)
             reactions_file_path = os.path.join(self.shared_folder, object_name + '/' + object_name + '-reactions.tsv')
+
+            #Preparing an output path for a future function
             output_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
-            bug_filepath = reactions_file_path
-            reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path, object_name)            
+
+            #This function performs the percentage calculation work for FBAModel Object Types.
+            html_path = reactions_file_to_pathway_reactions_and_percentages(reactions_file_path, output_path, object_name)            
+        
+        # Using KBase Gene Families- Domain Annotation
         elif object_type[:34] == "KBaseGeneFamilies.DomainAnnotation":
             logging.info("Succesfully recognized type as Domain Annotation")
             output_file_name += '_domain_annotation'
-            da = DomainAnnotation(self.callback_url)
-            obj = ws.get_objects2({'objects': [{'ref': upa}]})
+
+            #We get the object using workspace's get_objects2 function
+            obj = ws.get_objects2({'objects': [{'ref': main_input_ref}]})
         
-
-            
-            """#Temporary code:
-            data_struct_dict = obj['data']
-            temp_file_path = os.path.join(self.shared_folder, 'Temp_Data_File.txt')
-            f = open(temp_file_path, 'w')
-            f.write(str(data_struct_dict))
-            f.close()
-
-
-            #End temporary code"""
-
+            #Within the way the object dictionary is given, what we are looking for is in the location as follows:
             Y = obj['data'][0]['data']['data']
+
+            #Preparing our own output_file_path with Domain Annotation instead of FBAModel (why?)
             output_file_path = os.path.join(self.shared_folder, output_file_name + '.tsv')
-            TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path, object_name)
+
+            #This function (written for the module) finds percentages of pathway completeness.
+            html_path = TIGRFAM_file_to_pathway_reactions_and_percentages(Y, output_file_path, object_name)
             
         else:
             logging.info("Object type unknown")
+            raise Exception("Could not recognize ref to object- Check if object is FBA Model or Domain Annotation type. If so, the error is in the program, not the input - contact ogaloz@lbl.gov.")
        
 
-        html_path = os.path.join(self.shared_folder, output_file_name + '.html')
+
 
         html_dict = [{"path" : html_path, "name" : 'Completeness_Table'}]
 
-          
-        """Start Comment
 
-        #If type is TIGRFAM domain annotations, type_id = 0###
-        if type_id == 0 :
-            TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
-
-        #If type is Prokka domain annotations###
-        elif type_id == 2 :
-            logging.info("Prokka incomplete")
-        else :
-            logging.info("Could not get type of data")
-
-        Stop Comment"""
-
-
-        #genome_gff_dict = self.gfu.genome_to_gff({'genome_ref': ref_num})
-        #logging.info('what is the genome file: ' + str(type(genome_dict)))
-
-
-        #Getting genbank info
-        #genome_genbank = self.gfu.genome_to_genbank({'genome_ref': ref_num})
-
-        #converting the genbank file into readable format using BioPython: unclear if this will work.
-        #record = SeqIO.read(genome_genbank, "genbank")
-
-
-        
-
-
-        #test_local_log_file = os.path.join(self.shared_folder, ref_wo_slash)
-        #f=open(test_local_log_file, 'w')
-        #f.write(str(str(genome_dict)))
-        #f.close()
-
-
-        """
-        #Testing New Material Sept 10th:
-        #TIGRFAM DOMAIN ANNOTATION FILE!
-        bug_filepath = '/kb/module/data/HL1H-Tigrfam-Domain-Annot.csv'
-        output_path = os.path.join(self.shared_folder, 'tfam_to_pathways.tsv')
-        TIGRFAM_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)       
-        """
-        #Testing New Material Sept 11th:
-        #Downloading TSV file from FBA Model given reference number
-        #ref_num = params['main_input_ref']
-        #bug_filepath = '/kb/module/data/kb|g.220339.fbamdl0-reactions.tsv'
-        #output_path = os.path.join(self.shared_folder, 'check_path_complete.tsv')
-        #reactions_file_to_pathway_reactions_and_percentages(bug_filepath, output_path)
-
- 
+        #Preparing final report:
         report = report_client.create_extended_report({
 
         'direct_html_link_index': 0,

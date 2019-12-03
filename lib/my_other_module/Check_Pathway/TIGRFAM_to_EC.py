@@ -26,14 +26,18 @@ TIGRINFO_Filepath = Data_Directory_Filepath + 'tigrinfo.tsv'
 
 
 #This function takes a list of TIGRFAM IDs and adds to it a list of EC numbers in relation.
+#Inputs:
+# TIGRFAM_IDS_d1 (python list): A list of strings
+#
+# Outputs (python list): A depth 2 list of [id, ec_num]
 def tfam_main(TIGRFAM_IDS_d1):
 
     #output list looks like [[TIGRFAM ID, related EC], [TIGRFAM ID, related EC] , ... ]
     output_list = [["TIGRFAM ID","E.C. Number"]]
     tfam_d2_list = tsv_to_d2_list(TIGRINFO_Filepath)
-    for id in TIGRFAM_IDS_d1:
-        ec_num = TIGRID_to_EC_num(id, tfam_d2_list)
-        output_list.append([id, ec_num])
+    for ID in TIGRFAM_IDS_d1:
+        ec_num = TIGRID_to_EC_num(ID, tfam_d2_list)
+        output_list.append([ID, ec_num])
 
     return output_list
 
@@ -41,15 +45,22 @@ def tfam_main(TIGRFAM_IDS_d1):
 
 
 #This function takes a string (TIGR Id eg TIGR00011) and returns a related EC number if it exists.
+# Inputs:
+#   TIGRID (str): The TIGR ID
+#   tigr_list_d2 (python list): depth 2 list representing a file with TIGRFAM information
+#
+# Outputs:
+#   -1 (int): represents a failed search
+#   ec_num (str): the E.C number
 def TIGRID_to_EC_num(TIGRID, tigr_list_d2):
     
     #Check for errors:
     if type(TIGRID) != str:
         #print("The inputted Tigrfam ID must be a string")
-        return ""
+        return -1
     if len(TIGRID) > 10:
         #print("It's likely that you are not inputting a Tigrfam ID because it contains too many characters.")
-        return "?"
+        return -1
     
     #The tigrIds are in column index 1, ec numbers column index 5.
     # The following search could be sped up using the index:
@@ -67,13 +78,16 @@ def TIGRID_to_EC_num(TIGRID, tigr_list_d2):
     if found== True:
         if check_EC_num(ec_num) == 1:
             #print("EC Number for TigrID: " + TIGRID + " is not useful.")
-            return "?"
+            return -1
         else:
             return ec_num
+    else:
+        return -1
 
     
 
 #Function returns 0 if EC number is good, 1 if EC number is bad.
+#inputs: ec_num (str): the E.C number.
 def check_EC_num(ec_num):
     
     #First we check if EC number is anything at all

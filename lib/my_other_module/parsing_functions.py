@@ -5,6 +5,9 @@ import logging
 from jinja2 import Environment, PackageLoader, select_autoescape
 from my_other_module.HTML_Details import make_bar_graph_from_data
 
+
+# Inputs:
+# file_name (str) full path to location of file we will convert from tsv to a d2 list.
 def tsv_to_d2_list(file_name):
         d2_list = []
         with open(file_name) as list_values:
@@ -13,7 +16,9 @@ def tsv_to_d2_list(file_name):
                         d2_list.append(list_object)
         return d2_list
 
-
+#Function converts csv to a list in python format
+# Inputs:
+# file_name (str) full path to location of file we will convert from csv to a d2 list.
 def csv_to_d2_list(file_name):
         d2_list = []
         with open(file_name) as list_values:
@@ -23,6 +28,10 @@ def csv_to_d2_list(file_name):
         return d2_list
 
 
+#Converts a tsv file to a csv file
+#Inputs:
+# file_name (str) input file (tsv) 
+# output_file_name (str) output file name (csv)
 def tsv_to_csv(file_name, output_file_name):
     with open(file_name,'r') as tsvin, open(output_file_name, 'w') as csvout:
         tsvin = csv.reader(tsvin, delimiter='\t')
@@ -32,7 +41,7 @@ def tsv_to_csv(file_name, output_file_name):
             csvout.writerow(row)
 
 
-
+#See above, (opposite)
 def csv_to_tsv(file_name, output_file_name):
     with open(file_name,'r') as csvin, open(output_file_name, 'w') as tsvout:
         csvin = csv.reader(csvin)
@@ -45,6 +54,8 @@ def csv_to_tsv(file_name, output_file_name):
 
 
 #This function takes a list of lists and prints it out to a file with a given name.
+# Input_list: (python list (d2))
+# output_filename (str)
 def print_d2_list_out_to_tsv_file(input_list, output_filename):
                 with open(output_filename, 'w') as f:
                         for item in input_list:
@@ -52,7 +63,7 @@ def print_d2_list_out_to_tsv_file(input_list, output_filename):
                                 for part in item:
                                         my_string += str(part) + '\t'
                                 f.write("%s\n" % my_string)
-
+# See above, just for csv
 def print_d2_list_out_to_csv_file(input_list, output_filename):
                 with open(output_filename, 'w') as f:
                         for item in input_list:
@@ -63,6 +74,8 @@ def print_d2_list_out_to_csv_file(input_list, output_filename):
 
 
 #This function converts a d2_list (table) to an HTML table
+# Inputs:
+# list_d2 (python list)
 def d2_list_to_html_table(list_d2):
     
     html_string = '<head><meta charset="UTF-8"><!-- Below are imports for the font and datatables--><link href="https://fonts.googleapis.com/css?family=Oxygen:400,700" rel="stylesheet"><link rel="stylesheet" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/b-html5-1.5.4/b-print-1.5.4/datatables.min.css"/><!----><style type="text/css">*{font-family: "Oxygen", Helvetica, sans-serif;}</style></head><body><div id="stats" class="tabcontent">'
@@ -82,14 +95,26 @@ def d2_list_to_html_table(list_d2):
 
     return html_string
 
-
+#Inputs:
+#    list_d2: (python list)
+#    output_filename: (str) name of file to write output to.
 def d2_list_to_html_table_file(list_d2, output_filename):
     
     html_table = d2_list_to_html_table(list_d2)
     with open(output_filename, 'w') as f:
         f.write(html_table)
 
+
+
+#Inputs:
+# html_string (str) a string of the entire file.
+# output_filename (str) name of file to write to.
 def string_to_html_file(html_string, output_filename):
+        #perform checks if accurate html:
+
+
+        #finish performing checks.
+
         with open(output_filename, 'w') as f:
             f.write(html_string)
 

@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Analyze Genes Against Pathways
+name: Pathway Completeness
 
 tooltip: |
     Takes the bug's genes (FBA Model or Domain Annotation after (TIGRFam)) and checks whether pathways include the genes.
@@ -28,7 +28,7 @@ parameters :
         ui-name : |
             Genome_Data
         short-hint : |
-            The genome to be analyzed- may be in several different formats.
+            The genome to be analyzed- may be in several different formats. Currently TIGRFAM Domain Annotation or FBAModel.
 
 description : |
     <p>The app compares all the reactions in a Model and calculates how many of them are in each of the pathways given by KEGG. It currently only takes FBA Models (after running 'Build Metabolic Model') and Domain Annotation objects after running TIGRFAM Domain Annotation. It will run other versions of Domain Annotation objects (Pfam) but it won't return any valuable information.</p>

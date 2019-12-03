@@ -32,7 +32,7 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         cls.ctx.update({'token': token,
                         'user_id': user_id,
                         'provenance': [
-                            {'service': 'omreegalozpathway_completeness',
+                            {'service': 'Pathway_Completeness',
                              'method': 'please_never_use_it_in_production',
                              'method_params': []
                              }],
@@ -66,18 +66,6 @@ class omreegalozpathway_completenessTest(unittest.TestCase):
         #ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {'workspace_name': self.wsName,'main_input_ref': '32176/3/2'})
 
 
-        """
-    def test_kbase_genome(self):
-        #enter name of existing reference, from Lauren's assembly 
-        #The type of this data is: "KBaseGenomes.Genome‑10.0"
-
-        ref = "321"
-        ret = self.serviceImpl.run_omreegalozpathway_completeness(self.ctx, {
-            'workspace_name': self.wsName,
-            'main_input_ref': ref,
-        })
-
-        """
 
 
     def test_FBA_Model(self):
